@@ -28,6 +28,10 @@ set autoindent              "Autoindent
 "Ignore these files when completing names
 set wildignore=.svn,CVS,.git,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,node_modules/*
 
+"------ JSON magic ------
+au BufRead,BufNewFile *.json set filetype=json
+let g:vim_json_syntax_conceal = 0
+
 "------  Special Coffee Behavior ------
 au BufNewFile,BufReadPost *.coffee set shiftwidth=2 softtabstop=2 expandtab
 autocmd BufNewFile,BufRead *.coffee set filetype=coffee
@@ -39,12 +43,25 @@ set incsearch               "Search while typing
 set ignorecase              "Case Insensitive Searching
 set smartcase               "Lowercase = case insensitive, any uppercase = case sensitive
 set hlsearch                "Highlight all search results
+
 "Following line clears the search highlights when pressing Lb
-nnoremap <leader>b :nohlsearch<CR>
+nnoremap <silent> <leader>b :nohlsearch<CR>
+
 " http://www.vim.org/scripts/script.php?script_id=2572
+" ,a will open a prmompt for a term to search for
 noremap <leader>a :Ack 
+
+" ,A will close the new window created for that ack search
 noremap <leader>A <C-w>j<C-w>c<C-w>l
 let g:ackprg="ack -H --nocolor --nogroup --column --type-add php=.tpl"
+
+" WHen searching for words with * and navigating with N/n, keep line centered vertically
+:nnoremap n nzz
+:nnoremap N Nzz
+:nnoremap * *zz
+:nnoremap # #zz
+:nnoremap g* g*zz
+:nnoremap g# g#zz
 
 "------  Replacing ------
 "type S, then type what you're looking for, a /, and what to replace it with
@@ -61,6 +78,7 @@ autocmd FileType nerdtree noremap <buffer> <c-h> <nop>
 autocmd FileType nerdtree noremap <buffer> <c-right> <nop>
 autocmd FileType nerdtree noremap <buffer> <c-l> <nop>
 autocmd vimenter * if !argc() | NERDTree | endif " Open NERDTree if we're simply launching vim
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif " close if only nerdtree open
 
 "------  Tagbar Options  ------
 " http://adamyoung.net/Exuberant-Ctags-OS-X
@@ -82,6 +100,9 @@ cmap w!! %!sudo tee > /dev/null %
 
 " Closes the current window
 nnoremap <silent> <Leader>Q <C-w>c
+
+" CtrlP will load from the CWD, makes it easier with all these nested repos
+let g:ctrlp_working_path_mode = ''
 
 "------  Fugitive  ------ 
 "https://github.com/tpope/vim-fugitive
@@ -139,9 +160,18 @@ map <Leader>L :set invnumber<CR>
 map <Leader>v "+gP
 " ,c = Copy
 map <Leader>c "+y
+" Keep the cursor in place while joining lines
+nnoremap J mzJ`z
+" H = Home, L = End
+noremap H ^
+noremap L $
+vnoremap L g_
 
 " Deletes trailing space in file upon write
 " autocmd BufWritePre * :%s/\s\+$//e
+
+" Accidentally pressing Shift K will no longer open stupid man entry
+noremap K <nop>
 
 map <Leader>? :Helptags<CR>
 
