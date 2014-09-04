@@ -31,6 +31,7 @@ set wildignore=.svn,CVS,.git,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.
 "------ JSON magic ------
 au BufRead,BufNewFile *.json set filetype=json
 let g:vim_json_syntax_conceal = 0
+nmap <silent> =j :%!python -m json.tool<CR>
 
 "------  Special Coffee Behavior ------
 au BufNewFile,BufReadPost *.coffee set shiftwidth=2 softtabstop=2 expandtab
@@ -166,6 +167,8 @@ nnoremap J mzJ`z
 noremap H ^
 noremap L $
 vnoremap L g_
+" Prevent cursor from moving to beginning of line when switching buffers
+:se nostartofline
 
 " Deletes trailing space in file upon write
 " autocmd BufWritePre * :%s/\s\+$//e
